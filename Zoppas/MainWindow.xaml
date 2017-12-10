@@ -1,0 +1,1181 @@
+﻿<Window x:Class="Zoppas.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Zoppas"
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="900" Width="1280" Background="#FFF0FAFA" WindowStartupLocation="CenterScreen" BorderThickness="0" BorderBrush="#FF3AE4FF" WindowStyle="None" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" MinWidth="1100" MinHeight="750" MaxWidth="1920" MaxHeight="1080" WindowState="Maximized">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding InitCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Window.Resources>
+        <LinearGradientBrush x:Key="TabItem.Static.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#F0F0F0" Offset="0.0"/>
+            <GradientStop Color="#E5E5E5" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="TabItem.Static.Border" Color="#FFACACAC"/>
+        <LinearGradientBrush x:Key="TabItem.MouseOver.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFE8F1F9" Offset="0.0"/>
+            <GradientStop Color="#FFE8F1F9" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="TabItem.MouseOver.Border" Color="#FF84B6FF"/>
+        <SolidColorBrush x:Key="TabItem.Disabled.Background" Color="#FFDEDEDE"/>
+        <SolidColorBrush x:Key="TabItem.Disabled.Border" Color="#FFDEDEDE"/>
+        <SolidColorBrush x:Key="TabItem.Selected.Border" Color="Black"/>
+        <SolidColorBrush x:Key="TabItem.Selected.Background" Color="#FFE0E0E0"/>
+        <ControlTemplate x:Key="TabItemSysStyle" TargetType="{x:Type TabItem}">
+            <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+                <Border x:Name="mainBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1,1,1,0" Background="{TemplateBinding Background}" Margin="0">
+                    <Border x:Name="innerBorder" BorderBrush="Black" BorderThickness="1,1,1,0" Background="White" Margin="0,0,0,1" Opacity="0"/>
+                </Border>
+                <ContentPresenter x:Name="contentPresenter" ContentSource="Header" Focusable="False" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                        <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Background}"/>
+                    <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Border}"/>
+                    <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,0"/>
+                    <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,0"/>
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                        <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Opacity" TargetName="contentPresenter" Value="0.56"/>
+                    <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.Disabled.Background}"/>
+                    <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.Disabled.Border}"/>
+                    <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,0"/>
+                    <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,0"/>
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false"/>
+                        <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,0"/>
+                    <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,0"/>
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true"/>
+                        <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Panel.ZIndex" Value="1"/>
+                    <Setter Property="Margin" Value="-2,-2,-2,0"/>
+                    <Setter Property="Opacity" TargetName="innerBorder" Value="1"/>
+                    <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,0"/>
+                    <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,0"/>
+                </MultiDataTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="TabItemCPStyle" TargetType="{x:Type TabItem}">
+            <Grid x:Name="templateRoot" SnapsToDevicePixels="true" Margin="0,-1,0,0">
+                <Border x:Name="mainBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1,1,1,3" Background="{TemplateBinding Background}" Margin="20,0,0,0" CornerRadius="7">
+                    <Border x:Name="innerBorder" BorderBrush="#FF75C5C5" BorderThickness="1,1,1,0" Background="White" Margin="5,0,5,-1"  CornerRadius="7" Opacity="0"/>
+                </Border>
+                <ContentPresenter x:Name="contentPresenter" ContentSource="Header" Focusable="False" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" Margin="20,0,0,0"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                        <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Background}"/>
+                    <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Border}"/>
+                    <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,0"/>
+                    <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,3"/>
+
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                        <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Opacity" TargetName="contentPresenter" Value="0.56"/>
+                    <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.Disabled.Background}"/>
+                    <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.Disabled.Border}"/>
+                    <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,0"/>
+                    <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,3"/>
+
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false"/>
+                        <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,0"/>
+                    <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,3"/>
+
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true"/>
+                        <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Panel.ZIndex" Value="1"/>
+                    <Setter Property="Margin" Value="-2,-2,-2,0"/>
+                    <Setter Property="Opacity" TargetName="innerBorder" Value="1"/>
+                    <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,0"/>
+                    <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,3"/>
+
+                </MultiDataTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="tmpForThumb" TargetType="{x:Type Thumb}">
+            <Border>
+                <Rectangle Width="1" Name="rec">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0.5,0.3" EndPoint="1,1">
+                            <GradientStop Color="#FF0068FF" Offset="0.22"/>
+                            <GradientStop Color="#FF898989" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="rec" Property="Fill" Value="Black"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                        <Grid Name="g">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                    <GradientStop Color="White"/>
+                                    <GradientStop Color="#FFA0C7FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Border Name="bd" Padding="0,1,2,3" BorderBrush="#FF9B9B9B" BorderThickness="0" Margin="-1">
+                                <ContentPresenter Margin="5,4,1,3"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <Thumb Name="PART_HeaderGripper" Template="{StaticResource tmpForThumb}" HorizontalAlignment="Right" Margin="0,0,-1,0"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="g" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                            <GradientStop Color="#FFADC6FB" Offset="0.3"/>
+                                            <GradientStop Color="White" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--ListViewItem的样式-->
+        <Style TargetType="{x:Type ListViewItem}">
+            <Style.Setters>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                            <Border x:Name="bd" Background="White" 
+                                BorderThickness="0,0,0,1"  
+                                Padding="0" SnapsToDevicePixels="True" BorderBrush="#FFABADB3" Margin="0,10,0,0">
+                                <GridViewRowPresenter  Margin="0,4"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Trigger.Setters>
+                                        <Setter TargetName="bd" Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0.5,0.22" EndPoint="0.5,1">
+                                                    <GradientStop Color="White" Offset="0.54"/>
+                                                    <GradientStop Color="#FFCFCFCF" Offset="1"/>
+                                                    <GradientStop Color="#FFF3F3F3"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger.Setters>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+        </Style>
+        <Color x:Key="Color_sky_blue">#FF64FFFF</Color>
+        <Color x:Key="Color_watermelon_red">#FFFF6464</Color>
+        <local:ColorChange x:Key="colorchange"/>
+        <ControlTemplate x:Key="ButtonControlamplify" TargetType="{x:Type Button}">
+            <Grid>
+                <Rectangle Fill="#FFF0FAFA"></Rectangle>
+            </Grid>
+        </ControlTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1272*"/>
+            <!--<ColumnDefinition Width="5*"/>-->
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="Grid_drag" Height="86" Margin="0,2,0,0" VerticalAlignment="Top">
+            <Button Name="btn_amplify" Template="{DynamicResource ButtonControlamplify}" Background="#FFF0FAFA" BorderBrush="{x:Null}" Foreground="{x:Null}" PreviewMouseLeftButtonDown="btn_amplify_PreviewMouseLeftButtonDown" PreviewMouseDoubleClick="btn_amplify_PreviewMouseDoubleClick"/>
+            <Path Data="M1106,29.519 L1272,29.519" HorizontalAlignment="Right" Margin="0,43.008,0,41.019" Stretch="Fill" Width="234.75">
+                <Path.Stroke>
+                    <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                        <LinearGradientBrush.RelativeTransform>
+                            <TransformGroup>
+                                <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </LinearGradientBrush.RelativeTransform>
+                        <GradientStop Color="Black" Offset="0"/>
+                        <GradientStop Color="#FFDEDEDE" Offset="1"/>
+                    </LinearGradientBrush>
+                </Path.Stroke>
+                <Path.Fill>
+                    <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="#FFDEDEDE" Offset="1"/>
+                    </LinearGradientBrush>
+                </Path.Fill>
+            </Path>
+            <Button x:Name="btn_hide" HorizontalAlignment="Right" Margin="0,6.508,118,0" Width="31.5" Height="31.5" VerticalAlignment="Top" BorderBrush="{x:Null}" Background="{x:Null}" Click="btn_hide_Click">
+                <Path Data="M-1.5,-0.25 L14,-0.25" Fill="#FFFF6464" Height="1" Stretch="Fill" Stroke="Black" Width="16.5"/>
+            </Button>
+            <Button x:Name="button_amplify" HorizontalAlignment="Right" Margin="0,6.508,58.667,0" Width="31.5" Height="31.5" VerticalAlignment="Top" BorderBrush="{x:Null}" Background="{x:Null}" Click="button_amplify_Click">
+                <Rectangle Height="14" Stroke="Black" Width="14" RenderTransformOrigin="0.768,0.58"/>
+            </Button>
+            <Button x:Name="button_narrow" HorizontalAlignment="Right" Margin="0,6.508,58.667,0" Width="31.5" Height="31.5" VerticalAlignment="Top" BorderBrush="{x:Null}" Background="{x:Null}" Visibility="Collapsed" Click="button_narrow_Click">
+                <Rectangle Height="10" Stroke="Black" Width="10" RenderTransformOrigin="0.768,0.58"/>
+            </Button>
+            <Button x:Name="btn_close" HorizontalAlignment="Right" Margin="0,6.508,10,0" Width="31.5" Height="31.5" VerticalAlignment="Top" BorderBrush="{x:Null}" Background="{x:Null}" Command="{Binding CloseMainWindowCommand}">
+                <Path Data="M0.5,1.0910791 L12.667041,12.424078 M1.1099004,13.015207 L12.0571,0.5" Fill="#FFFF6464" Stretch="Fill" Stroke="Black" Width="13.167" Height="13.515"/>
+            </Button>
+            <TextBlock x:Name="tbk_title" Text="咖啡壶检测仪V1.0" HorizontalAlignment="Left" Margin="10,10.634,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="KaiTi"/>
+            <Button x:Name="btn_to_login" HorizontalAlignment="Right" Margin="0,5.634,177.25,0" Width="31.5" Height="31.5" VerticalAlignment="Top" BorderBrush="{x:Null}" Background="{x:Null}" Click="btn_to_login_Click">
+                <Path Fill="White" Height="18.532" Stroke="Black" Data="M22.500764,0.5 L22.500764,12.5 22.500764,24.5 C17.633754,24.5 13.443485,21.60253 11.560805,17.438438 L11.446352,17.176813 11.402354,17.219322 C10.255039,18.276121 8.7259309,18.925741 7.0432253,18.93693 3.453454,18.9608 0.52401733,16.070068 0.50014687,12.480296 0.47627544,8.8905249 3.3670087,5.9610882 6.95678,5.9372172 8.6394854,5.9260273 10.177098,6.555254 11.338365,7.5966997 L11.485058,7.7347078 11.560805,7.5615602 C13.443485,3.397469 17.633754,0.5 22.500764,0.5 z" RenderTransformOrigin="0.978261591557427,0.5" Stretch="Fill" Width="17.05" Margin="-16,0,0,-17">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Button>
+            <TextBlock x:Name="tbk_system_state" Text="系统状态" HorizontalAlignment="Right" Margin="0,0,119,8" VerticalAlignment="Bottom" Foreground="Black" FontFamily="YouYuan" FontSize="24"/>
+            <Ellipse x:Name="ell_system_state" Fill="{Binding SystsystemState, Converter={StaticResource colorchange}}" HorizontalAlignment="Right" Height="31.494" Margin="0,0,42,4.525" Stroke="Black" VerticalAlignment="Bottom" Width="31.492"/>
+        </Grid>
+        <TabControl x:Name="tabControl" Margin="0,43,0,0" BorderBrush="Black" Background="{x:Null}" Foreground="{x:Null}" BorderThickness="1" Padding="2,0,2,2">
+            <TabItem x:Name="TabItem_detect" Header="自动检测" HorizontalAlignment="Right" Margin="-1,1,1,-1" Width="130" Background="{x:Null}" Foreground="Black" BorderBrush="{x:Null}" Template="{DynamicResource TabItemSysStyle}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="43" FontSize="24" VerticalAlignment="Top">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="422.138"/>
+                        <ColumnDefinition Width="789.862"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="85.999"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ListView x:Name="listview_detect" Margin="0,61,0,66" Background="#FFF0FDFF" FontFamily="YouYuan" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" MinHeight="600" ItemsSource="{Binding Products}" Grid.ColumnSpan="2" Grid.Column="1" Grid.RowSpan="2">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="200" Header="咖啡壶编号">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding ID, Mode=OneWay}" Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="支架号">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Frame, Mode=OneWay}" Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="检测结果">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200">
+                                                <Ellipse Fill="{Binding Result, Converter={StaticResource colorchange}, Mode=OneWay}" Width="20" Height="20" Stroke="Black"/>
+                                            </Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="OP10">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200">
+                                                <Ellipse Fill="{Binding OP10, Converter={StaticResource colorchange}, Mode=OneWay}" Width="20" Height="20" Stroke="Black"/>
+                                            </Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="OP20">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200">
+                                                <Ellipse Fill="{Binding OP20, Converter={StaticResource colorchange}, Mode=OneWay}" Width="20" Height="20" Stroke="Black"/>
+                                            </Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="OP30">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200">
+                                                <Ellipse Fill="{Binding OP30, Converter={StaticResource colorchange}, Mode=OneWay}" Width="20" Height="20" Stroke="Black"/>
+                                            </Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="OP40">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200">
+                                                <Ellipse Fill="{Binding OP40, Converter={StaticResource colorchange}, Mode=OneWay}" Width="20" Height="20" Stroke="Black"/>
+                                            </Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="OP50">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200">
+                                                <Ellipse Fill="{Binding OP50, Converter={StaticResource colorchange}, Mode=OneWay}" Width="20" Height="20" Stroke="Black"/>
+                                            </Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="OP60">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200">
+                                                <Ellipse Fill="{Binding OP60, Converter={StaticResource colorchange}, Mode=OneWay}" Width="20" Height="20" Stroke="Black"/>
+                                            </Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="OP70">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200">
+                                                <Ellipse Fill="{Binding OP70, Converter={StaticResource colorchange}, Mode=OneWay}" Width="20" Height="20" Stroke="Black"/>
+                                            </Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <!--<GridViewColumn Width="100" Header="OP80">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200">
+                                                <Ellipse Fill="{Binding OP80, Converter={StaticResource colorchange}, Mode=OneWay}" Width="20" Height="20" Stroke="Black"/>
+                                            </Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>-->
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Label x:Name="Status" Content="{Binding Status}" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="1202" Height="61"/>
+                    <!--<Button x:Name="add" Content="add" Height="51" VerticalAlignment="Bottom" Click="button_add_Click" Background="{x:Null}" BorderBrush="#FFE4E4E4" BorderThickness="0,0,1,1" Foreground="{x:Null}" Grid.Row="1" Grid.Column="2" Margin="-59,0,0,0" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>-->
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="TabItem_Calibration" Header="标定" Margin="0,0,1,-2" Width="130" Background="{x:Null}" Template="{DynamicResource TabItemSysStyle}" Foreground="Black" BorderBrush="{x:Null}" Height="43" FontSize="24">
+                <ListView ItemsSource="{Binding Items}" Background="AliceBlue" FontFamily="youyuan">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="检测项名称" DisplayMemberBinding="{Binding Name}" Width="300"/>
+                            <GridViewColumn Header="最小值" DisplayMemberBinding="{Binding Min}" Width="150" />
+                            <GridViewColumn Header="最大值" DisplayMemberBinding="{Binding Max}" Width="150" />
+                            <GridViewColumn Header="结果" DisplayMemberBinding="{Binding Value}" Width="150" />
+                            <GridViewColumn Header="是否合格" DisplayMemberBinding="{Binding Result}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+            <TabItem x:Name="TabItem_maintain" IsEnabled="True" Header="参数设置" Margin="0,0,1,-2" Background="{x:Null}" Foreground="Black" BorderBrush="{x:Null}" Template="{DynamicResource TabItemSysStyle}" HorizontalAlignment="Right" Width="130" Height="43" FontSize="24">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="46"/>
+                        <RowDefinition Height="674*" MinHeight="600"/>
+                        <RowDefinition Height="80" MaxHeight="80"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="tbk_hint" Text="提示：请给不同种类的咖啡壶，设置参数" HorizontalAlignment="Left" Margin="40,19.563,0,0" FontFamily="YouYuan" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" Width="432"/>
+                    <Button Visibility="Hidden" x:Name="btn_save_maintain" Content="导入出厂设置" Margin="0,0,617,5" Background="White" BorderThickness="2" HorizontalAlignment="Right" FontFamily="YouYuan" Width="160" VerticalAlignment="Bottom" Height="36" />
+                    <Border x:Name="borderPara" Grid.Row="1"  Margin="30,9,20,4"  BorderBrush="#FF999999"/>
+                    <ScrollViewer Name="ScrollViewerParameter" Grid.Row="1" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="30,10,20,5" GotFocus="ScrollViewerParameter_GotFocus" LostFocus="ScrollViewerParameter_LostFocus">
+                        <StackPanel Margin="0,0,20,0" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Auto" >
+                            <Expander x:Name="expander_short_1ACPE7319" Margin="0" FontFamily="YouYuan" VerticalContentAlignment="Stretch">
+                                <Expander.Header>
+                                    <TextBlock Text="7319" x:Name="tbk_short_1ACPE7319" Margin="0" Height="40" Padding="5"/>
+                                </Expander.Header>
+                                <Grid Background="AliceBlue" Margin="200,-30,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="6*"/>
+
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="*"/>
+
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="33*"/>
+                                        <RowDefinition Height="34.5"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="36*"/>
+                                    </Grid.RowDefinitions>
+                                    <Border BorderBrush="#FFABADB3" BorderThickness="1" Grid.RowSpan="12" Margin="0" Grid.ColumnSpan="9"/>
+                                    <Label x:Name="lbl_1_item" Content="检测项目" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinWidth="300"/>
+                                    <Label x:Name="lbl_1_standard_min" Content="标准最小值" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="0,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1"/>
+                                    <Label x:Name="lbl_1_standard_max" Content="标准最大值" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="0,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_standard_unit" Content="单位" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="0,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="3"/>
+                                    <Label x:Name="lbl_1_detect_min" Content="当前最小值" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="0,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="4"/>
+                                    <Label x:Name="lbl_1_detect_max" Content="当前最大值" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="0,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="5"/>
+                                    <Label x:Name="lbl_1_detect_unit" Content="单位" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="0,3,3,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_1_item" Content="{Binding Parameters[0].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="1" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_1_standard_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Text="{Binding Parameters[0].FactoryMin}" IsEnabled="False" Grid.Row="1" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_1_standard_max" Text="{Binding Parameters[0].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="1" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_1_standard_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="3" />
+                                    <TextBox x:Name="textbox_1_1_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="1" Grid.Column="4" Text="{Binding Parameters[0].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                    <TextBox x:Name="textbox_1_1_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="1" Grid.Column="5" Text="{Binding Parameters[0].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_1_detect_unit" Content="{Binding Parameters[0].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="1" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_2_item" Content="{Binding Parameters[1].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="2" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_2_standard_min" Text="{Binding Parameters[1].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="2" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_2_standard_max" Text="{Binding Parameters[1].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="2" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_2_standard_unit" Content="{Binding Parameters[1].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="2" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_2_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="2" Grid.Column="4" Text="{Binding Parameters[1].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_2_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="2" Grid.Column="5" Text="{Binding Parameters[1].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_2_detect_unit" Content="{Binding Parameters[1].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="2" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_6_item" Content="{Binding Parameters[2].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="3" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_6_standard_min" Text="{Binding Parameters[2].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="3" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_6_standard_max" Text="{Binding Parameters[2].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="3" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_6_standard_unit" Content="{Binding Parameters[2].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="3" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_6_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="3" Grid.Column="4" Text="{Binding Parameters[2].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_6_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="3" Grid.Column="5" Text="{Binding Parameters[2].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_6_detect_unit" Content="{Binding Parameters[2].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="3" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_7_item" Content="{Binding Parameters[3].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="4" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_7_standard_min" Text="{Binding Parameters[3].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="4" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_7_standard_max" Text="{Binding Parameters[3].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="4" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_7_standard_unit" Content="{Binding Parameters[3].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="4" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_7_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="4" Grid.Column="4" Text="{Binding Parameters[3].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_7_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="4" Grid.Column="5" Text="{Binding Parameters[3].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_7_detect_unit" Content="{Binding Parameters[3].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="4" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_8_item" Content="{Binding Parameters[4].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="5" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_8_standard_min" Text="{Binding Parameters[4].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="5" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_8_standard_max" Text="{Binding Parameters[4].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="5" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_8_standard_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="5" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_8_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="5" Grid.Column="4" Text="{Binding Parameters[4].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_8_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="5" Grid.Column="5" Text="{Binding Parameters[4].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_8_detect_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="5" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_9_item" Content="{Binding Parameters[5].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="6" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_9_standard_min" Text="{Binding Parameters[5].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="6" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_9_standard_max" Text="{Binding Parameters[5].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="6" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_9_standard_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="6" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_9_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="6" Grid.Column="4" Text="{Binding Parameters[5].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_9_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="6" Grid.Column="5" Text="{Binding Parameters[5].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_9_detect_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="6" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_11_item" Content="{Binding Parameters[6].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="7" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_11_standard_min" Text="{Binding Parameters[6].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="7" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_11_standard_max" Text="{Binding Parameters[6].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="7" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_11_standard_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="7" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_11_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="7" Grid.Column="4" Text="{Binding Parameters[6].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_11_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="7" Grid.Column="5" Text="{Binding Parameters[6].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_11_detect_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="7" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_12_item" Content="{Binding Parameters[7].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="8" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_12_standard_min" Text="{Binding Parameters[7].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="8" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_12_standard_max" Text="{Binding Parameters[7].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="8" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_12_standard_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="8" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_12_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="8" Grid.Column="4" Text="{Binding Parameters[7].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_12_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="8" Grid.Column="5" Text="{Binding Parameters[7].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_12_detect_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="8" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_14_item" Content="{Binding Parameters[8].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="9" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_14_standard_min" Text="{Binding Parameters[8].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="9" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_14_standard_max" Text="{Binding Parameters[8].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="9" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_14_standard_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="9" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_14_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="9" Grid.Column="4" Text="{Binding Parameters[8].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_14_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="9" Grid.Column="5" Text="{Binding Parameters[8].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_14_detect_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="9" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_15_item" Content="{Binding Parameters[9].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="10" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_15_standard_min" Text="{Binding Parameters[9].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="10" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_15_standard_max" Text="{Binding Parameters[9].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="10" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_15_standard_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="10" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_15_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="10" Grid.Column="4" Text="{Binding Parameters[9].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_15_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="10" Grid.Column="5" Text="{Binding Parameters[9].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_15_detect_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="10" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_16_item" Content="{Binding Parameters[10].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,3" VerticalContentAlignment="Center" Grid.Row="11" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_16_standard_min" Text="{Binding Parameters[10].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,3" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="11" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_16_standard_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,3" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Text="{Binding Parameters[10].FactoryMax}" IsEnabled="False" Grid.Row="11" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_16_standard_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,3" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="11" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_16_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,3" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="11" Grid.Column="4" Text="{Binding Parameters[10].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_16_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,3" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="11" Grid.Column="5" Text="{Binding Parameters[10].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_16_detect_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,3" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="11" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_1633_item" Content="{Binding Parameters[11].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,3" VerticalContentAlignment="Center" Grid.Row="12" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_316_standard_min" Text="{Binding Parameters[11].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,3" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="12" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_13_16_standard_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,3" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Text="{Binding Parameters[11].FactoryMax}" IsEnabled="False" Grid.Row="12" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_16_sta3ndard_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,3" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="12" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_13_16_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,3" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="12" Grid.Column="4" Text="{Binding Parameters[11].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_316_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,3" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="12" Grid.Column="5" Text="{Binding Parameters[11].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_16_det3ect_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,3" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="12" Grid.Column="6"/>
+                                </Grid>
+                            </Expander>
+                            <Expander>
+                                <Expander.Header>
+                                    <TextBlock Text="标定"  x:Name="calibration" Margin="0" Height="40" Padding="5"/>
+                                </Expander.Header>
+                                <Grid Background="AliceBlue" Margin="200,-30,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="6*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="33*"/>
+                                        <RowDefinition Height="34.5"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="35*"/>
+                                        <RowDefinition Height="36*"/>
+                                    </Grid.RowDefinitions>
+                                    <Border BorderBrush="#FFABADB3" BorderThickness="1" Grid.RowSpan="12" Margin="0" Grid.ColumnSpan="9"/>
+                                    <Label x:Name="lbl_1_ite" Content="检测项目" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinWidth="300"/>
+                                    <Label x:Name="lbl_1_stanard_min" Content="标准最小值" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="0,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1"/>
+                                    <Label x:Name="lbl_1_stanard_max" Content="标准最大值" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="0,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_stanard_unit" Content="单位" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="0,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="3"/>
+                                    <Label x:Name="lbl_1_detet_min" Content="当前最小值" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="0,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="4"/>
+                                    <Label x:Name="lbl_1_detet_max" Content="当前最大值" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="0,3,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="5"/>
+                                    <Label x:Name="lbl_1_detet_unit" Content="单位" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="0,3,3,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_1_em" Content="{Binding CalibrationParameters[0].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="1" MinWidth="300"/>
+                                    <TextBox x:Name="textbo_1_1_standard_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Text="{Binding CalibrationParameters[0].FactoryMin}" IsEnabled="False" Grid.Row="1" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox1_1_standard_max" Text="{Binding CalibrationParameters[0].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="1" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_1_standard_ut" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="3" />
+                                    <TextBox x:Name="textbox_1_1_detet_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="1" Grid.Column="4" Text="{Binding CalibrationParameters[0].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                    <TextBox x:Name="textbox_1_1_detet_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="1" Grid.Column="5" Text="{Binding CalibrationParameters[0].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_1_detect_unt" Content="{Binding CalibrationParameters[0].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="1" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_2_iem" Content="{Binding CalibrationParameters[1].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="2" MinWidth="300"/>
+                                    <TextBox x:Name="textbox1_2_standard_min" Text="{Binding CalibrationParameters[1].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="2" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_2_stanard_max" Text="{Binding CalibrationParameters[1].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="2" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_2_standard_uit" Content="{Binding CalibrationParameters[1].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="2" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_2_detet_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="2" Grid.Column="4" Text="{Binding CalibrationParameters[1].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_2_detet_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="2" Grid.Column="5" Text="{Binding CalibrationParameters[1].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_2_detect_unt" Content="{Binding CalibrationParameters[1].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="2" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_6_ite" Content="{Binding CalibrationParameters[2].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="3" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_6_stanard_min" Text="{Binding CalibrationParameters[2].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="3" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_6_standar_max" Text="{Binding CalibrationParameters[2].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="3" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_6_standard_uni" Content="{Binding CalibrationParameters[2].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="3" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_6_detemin" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="3" Grid.Column="4" Text="{Binding CalibrationParameters[2].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_6_det_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="3" Grid.Column="5" Text="{Binding CalibrationParameters[2].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_6_detectit" Content="{Binding CalibrationParameters[2].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="3" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_7_ite" Content="{Binding CalibrationParameters[3].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="4" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_7_standard_m" Text="{Binding CalibrationParameters[3].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="4" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_7_standaax" Text="{Binding CalibrationParameters[3].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="4" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_7_standard_ut" Content="{Binding CalibrationParameters[3].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="4" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_7_dct_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="4" Grid.Column="4" Text="{Binding CalibrationParameters[3].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_7_det_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="4" Grid.Column="5" Text="{Binding CalibrationParameters[3].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_7_detecnit" Content="{Binding CalibrationParameters[3].Unit}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="4" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_8_it" Content="{Binding CalibrationParameters[4].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="5" MinWidth="300"/>
+                                    <TextBox x:Name="textbox8_standard_min" Text="{Binding CalibrationParameters[4].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="5" Grid.Column="1"/>
+                                    <TextBox x:Name="textbo_standard_max" Text="{Binding CalibrationParameters[4].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="5" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_8_standunit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="5" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_8_detein" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="5" Grid.Column="4" Text="{Binding CalibrationParameters[4].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textbox_1_8ct_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="5" Grid.Column="5" Text="{Binding CalibrationParameters[4].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_8_t_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="5" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_1_2tem" Content="{Binding CalibrationParameters[5].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="6" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_dard_min" Text="{Binding CalibrationParameters[5].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="6" Grid.Column="1"/>
+                                    <TextBox x:Name="textbotandard_max" Text="{Binding CalibrationParameters[5].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="6" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_dard_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="6" Grid.Column="3"/>
+                                    <TextBox x:Name="tx_1_9_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="6" Grid.Column="4" Text="{Binding CalibrationParameters[5].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="textb_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="6" Grid.Column="5" Text="{Binding CalibrationParameters[5].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbletect_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="6" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl_441_item" Content="{Binding CalibrationParameters[6].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="7" MinWidth="300"/>
+                                    <TextBox x:Name="textboxtandard_min" Text="{Binding CalibrationParameters[6].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="7" Grid.Column="1"/>
+                                    <TextBox x:Name="textbox_1_11rd_max" Text="{Binding CalibrationParameters[6].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="7" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_11ard_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="7" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_ect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="7" Grid.Column="4" Text="{Binding CalibrationParameters[6].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="text11_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="7" Grid.Column="5" Text="{Binding CalibrationParameters[6].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_etect_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="7" Grid.Column="6"/>
+
+                                    <Label x:Name="lb331_12_item" Content="{Binding CalibrationParameters[7].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="8" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_1_12_smin" Text="{Binding CalibrationParameters[7].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="8" Grid.Column="1"/>
+                                    <TextBox x:Name="textbtandard_max" Text="{Binding CalibrationParameters[7].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="8" Grid.Column="2"/>
+                                    <Label x:Name="lbl_1_12_sta_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="8" Grid.Column="3"/>
+                                    <TextBox x:Name="text12_detect_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="8" Grid.Column="4" Text="{Binding CalibrationParameters[7].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="tox_1_12_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="8" Grid.Column="5" Text="{Binding CalibrationParameters[7].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="lbl_1_tect_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="8" Grid.Column="6"/>
+
+                                    <Label x:Name="lbl444_item" Content="{Binding CalibrationParameters[8].Name}" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="10,1.5,0,0" VerticalContentAlignment="Center" Grid.Row="9" MinWidth="300"/>
+                                    <TextBox x:Name="textbox_standard_min" Text="{Binding CalibrationParameters[8].FactoryMin}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="9" Grid.Column="1"/>
+                                    <TextBox x:Name="text1_14_standard_max" Text="{Binding CalibrationParameters[8].FactoryMax}" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" IsEnabled="False" Grid.Row="9" Grid.Column="2"/>
+                                    <Label x:Name="lb14_standard_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" d:LayoutOverrides="TopPosition, BottomPosition" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Row="9" Grid.Column="3"/>
+                                    <TextBox x:Name="textbox_1_ct_min" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="9" Grid.Column="4" Text="{Binding CalibrationParameters[8].UserMin, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBox x:Name="text14_detect_max" Background="White" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Grid.Row="9" Grid.Column="5" Text="{Binding CalibrationParameters[8].UserMax, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Label x:Name="l14_detect_unit" Content="mm" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="0,0,1,1" FontSize="20" Height="33" Margin="3,1.5,3,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" d:LayoutOverrides="TopPosition, BottomPosition" Grid.Row="9" Grid.Column="6"/>
+                                </Grid>
+                            </Expander>
+                        </StackPanel>
+
+                    </ScrollViewer>
+                    <Button Command="{Binding SaveFileParametersCommand}" Content="保存文件配置" HorizontalAlignment="Left" Margin="489,5,0,0" VerticalAlignment="Top" Width="190" Height="36"/>
+                    <Button Visibility="Hidden" Command="{Binding SaveFileParametersCommand}" Content="导出文件配置" HorizontalAlignment="Left" Margin="849,5,0,0" VerticalAlignment="Top" Width="190" Height="36"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="TabItem_error" Header="报警" HorizontalAlignment="Right" Margin="0,0,1,-2" Width="130" Background="{x:Null}" Template="{DynamicResource TabItemSysStyle}" Foreground="Black" BorderBrush="{x:Null}" Height="43" FontSize="24">
+                <Grid>
+                    <ListView x:Name="listview_error" Background="AliceBlue" ScrollViewer.HorizontalScrollBarVisibility="Disabled" FontFamily="Youyuan" Margin="66,40,66,60" HorizontalContentAlignment="Center" MinHeight="600" ItemsSource="{Binding AlarmViewModel, UpdateSourceTrigger=PropertyChanged}">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="False">
+
+                                <GridViewColumn Width="100"  Header="序号">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Number, Mode=OneWay}" Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="170" Header="编号">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Code, Mode=OneWay}" Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="300" Header="故障名称">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Message, Mode=OneWay}" Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="500" Header="解决办法">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Solution, Mode=OneWay}" Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem IsEnabled="false" x:Name="TabItem_manual" Header="单工位" HorizontalAlignment="Right" Margin="0,0,1,-2" Width="150" Background="{x:Null}" Template="{DynamicResource TabItemSysStyle}" Foreground="Black" BorderBrush="{x:Null}" Height="43" FontSize="24">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="110"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="311*"/>
+                        <ColumnDefinition Width="322*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="Border_select" BorderThickness="0,0,1,0" BorderBrush="#FFACACAC" Margin="0">
+                        <Grid x:Name="Grid_select">
+                            <Grid.ColumnDefinitions>
+
+                                <ColumnDefinition Width="185*"/>
+                                <ColumnDefinition Width="344*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="tbk_select" Margin="0,10,0,0" TextWrapping="Wrap" Text="请选择操作" VerticalAlignment="Center" FontFamily="YouYuan" d:LayoutOverrides="Width" HorizontalAlignment="Center"/>
+
+                            <ComboBox x:Name="comboBox_select" Margin="0,7,73,0" Grid.Column="2" VerticalAlignment="Center">
+                                <ComboBoxItem x:Name="ComboBoxItem_seek" VerticalContentAlignment="Center" Selected="ComboBoxItem_seek_Selected">
+                                    <TextBlock x:Name="tbk_seek" Foreground="Black" FontFamily="YouYuan" Text="查询" />
+                                </ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItem_detect" VerticalContentAlignment="Center" Selected="ComboBoxItem_detect_Selected">
+                                    <TextBlock x:Name="tbk_detect" Foreground="Black" FontFamily="YouYuan" Text="检测" />
+                                </ComboBoxItem>
+                            </ComboBox>
+                            <TextBlock x:Name="tbk_CP_type5" Text="咖啡壶型号" Margin="0,0,0,10" VerticalAlignment="Center" Foreground="Black" FontFamily="YouYuan" FontSize="24" Grid.Row="1" d:LayoutOverrides="Width" HorizontalAlignment="Center"/>
+                            <ComboBox x:Name="comboBox_CP_type_manual" Margin="0,0,73,7" VerticalAlignment="Center" BorderBrush="#FFACACAC" Foreground="Black" Background="#FFE5E5E5" Grid.Row="1" Grid.Column="2">
+                                <ComboBoxItem x:Name="ComboBoxItem_short15" Selected="ComboBoxItem_short15_Selected">
+                                    <TextBlock x:Name="tbk_short_1ACPE3" Foreground="Black" FontFamily="YouYuan"><Run Text="矮壶1ACPE7319"/></TextBlock>
+                                </ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItem_short25" Selected="ComboBoxItem_short25_Selected">
+                                    <TextBlock x:Name="tbk_short_1ACPE4" Foreground="Black" FontFamily="YouYuan"><Run Text="矮壶1ACPE7204"/></TextBlock>
+                                </ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItem_tall15">
+                                    <TextBlock x:Name="tbk_tall_1ACPE3" Foreground="Black" FontFamily="YouYuan"><Run Text="高壶1ACPE7157"/></TextBlock>
+                                </ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItem_tall25">
+                                    <TextBlock x:Name="tbk_tall_1ACPE4" Foreground="Black" FontFamily="YouYuan"><Run Text="高壶1ACPE7250"/></TextBlock>
+                                </ComboBoxItem>
+                            </ComboBox>
+
+                        </Grid>
+                    </Border>
+                    <Border x:Name="Border_seek" Margin="0" Visibility="Hidden" Grid.Column="1" >
+                        <Grid x:Name="Grid_seek" Margin="1.5,0,0,0">
+                            <TextBlock x:Name="tbk_CP_ID" Text="咖啡壶编号" Margin="0,42.545,488.5,0" VerticalAlignment="Top" Foreground="Black" FontFamily="YouYuan" FontSize="24" HorizontalAlignment="Right"/>
+                            <TextBox x:Name="textBox_CP_ID" Height="40.727" Margin="0,35.4,187.584,0" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="YouYuan" HorizontalAlignment="Right" Width="271" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"/>
+                            <Button x:Name="btn_seek" Content="确定" HorizontalAlignment="Right" Height="40.727" Margin="0,35.4,31,0" VerticalAlignment="Top" Width="109" FontFamily="YouYuan" Background="White"/>
+
+                        </Grid>
+
+                    </Border>
+                    <Border x:Name="Border_detect" Margin="0" Grid.Column="1" >
+                        <Grid x:Name="Grid_detect" d:LayoutOverrides="LeftMargin, RightMargin, TopPosition, BottomPosition">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="85*"/>
+                                <ColumnDefinition Width="80*"/>
+                                <ColumnDefinition Width="60*"/>
+                                <ColumnDefinition Width="97*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="tbk_camera" Text="相机选择" Margin="53,0,20,9" Foreground="Black" FontFamily="YouYuan" FontSize="24" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                            <ComboBox x:Name="comboBox_camera" Margin="33,7,0,0" BorderBrush="#FFACACAC" Foreground="Black" Background="#FFE5E5E5" d:LayoutOverrides="Height" Grid.Column="1" VerticalAlignment="Center">
+                                <ComboBoxItem x:Name="ComboBoxItem_ca1">
+                                    <TextBlock x:Name="tbk_ca1" Foreground="Black" FontFamily="YouYuan" Text="相机 1"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItem_ca2">
+                                    <TextBlock x:Name="tbk_ca2" Foreground="Black" FontFamily="YouYuan"><Run Text="相机 "/><Run Text="2"/></TextBlock>
+                                </ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItem_ca3">
+                                    <TextBlock x:Name="tbk_ca3" Foreground="Black" FontFamily="YouYuan"><Run Text="相机 "/><Run Text="3"/></TextBlock>
+                                </ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItem_ca4">
+                                    <TextBlock x:Name="tbk_ca4" Foreground="Black" FontFamily="YouYuan"><Run Text="相机 "/><Run Text="4"/></TextBlock>
+                                </ComboBoxItem>
+                            </ComboBox>
+                            <Button x:Name="btn_camera" Content="确定" Margin="30,7,30,0" FontFamily="YouYuan" Background="White" Click="btn_camera_Click" Grid.Column="3" Height="36.48"/>
+                            <TextBlock x:Name="tbk_light" Text="光源操作" Margin="33,0,0,10" VerticalAlignment="Center" Foreground="Black" FontFamily="YouYuan" FontSize="24" Grid.Row="1" d:LayoutOverrides="Width" HorizontalAlignment="Center"/>
+                            <ComboBox x:Name="comboBox_lighthandle" Margin="0,0,0,7" VerticalAlignment="Center" BorderBrush="#FFACACAC" Foreground="Black" Background="#FFE5E5E5" HorizontalAlignment="Right" Width="88" Grid.Row="1" Grid.Column="2">
+                                <ComboBoxItem x:Name="ComboBoxItem_on">
+                                    <TextBlock x:Name="tbk_on" Foreground="Black" FontFamily="YouYuan" Text="打开"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItem_off">
+                                    <TextBlock x:Name="tbk_off" Foreground="Black" FontFamily="YouYuan" Text="关闭"/>
+                                </ComboBoxItem>
+                            </ComboBox>
+                            <Button x:Name="btn_light" Content="确定" Margin="30,0,30,7" FontFamily="YouYuan" Background="White" Height="36.48" Click="btn_light_Click" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="comboBox_light" Margin="33,0,0,7" VerticalAlignment="Center" BorderBrush="#FFACACAC" Foreground="Black" Background="#FFE5E5E5" Grid.Row="1" Grid.Column="1">
+                                <ComboBoxItem x:Name="ComboBoxItem_light1">
+                                    <TextBlock x:Name="tbk_light1" Foreground="Black" FontFamily="YouYuan" Text="光源 1"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItem_light2">
+                                    <TextBlock x:Name="tbk_light2" Foreground="Black" FontFamily="YouYuan" Text="光源 2"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItem_light3">
+                                    <TextBlock x:Name="tbk_light3" Foreground="Black" FontFamily="YouYuan" Text="光源 3"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItem_light4">
+                                    <TextBlock x:Name="tbk_light4" Foreground="Black" FontFamily="YouYuan" Text="光源 4"/>
+                                </ComboBoxItem>
+                            </ComboBox>
+                            <Label x:Name="camera_test" Content="" Margin="34.166,10,-40,20" BorderThickness="0,0,0,1" BorderBrush="Black" FontSize="8" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" d:IsHidden="True" Grid.Column="2" Visibility="Hidden"/>
+                            <Label x:Name="light_test" Content="" Margin="34.166,0,-40,-8.985" BorderThickness="0,0,0,1" BorderBrush="Black" FontSize="8" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" d:IsHidden="True" Height="18.667" VerticalAlignment="Bottom" Grid.Column="2" Visibility="Hidden"/>
+
+                        </Grid>
+
+                    </Border>
+                    <TabControl x:Name="tabControl_op" Margin="0" TabStripPlacement="Bottom" Background="{x:Null}" BorderBrush="#FFABADB3" BorderThickness="1" Padding="0" Grid.ColumnSpan="2" Grid.Row="1">
+                        <TabItem x:Name="TabItem_op20" Header="工位20" Height="50" Margin="0" Background="#FFF0FAFA" BorderBrush="#FFABADB3" Foreground="Black" BorderThickness="1" Template="{DynamicResource TabItemCPStyle}" FontFamily="YouYuan" FontSize="30" Width="150">
+                            <Grid Background="AliceBlue">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="353"/>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="10">
+                                    <!--<Image x:Name="image" Source="top view.png"/>-->
+                                </Border>
+                                <DataGrid Name="queryDatagrid" ItemsSource="{Binding QueryProduct.Items}" HorizontalAlignment="Left" Height="616" Margin="10,10,0,0" VerticalAlignment="Top" Width="343" Grid.Column="1">
+                                    <DataGrid.Columns>
+                                        <!--<DataGridTextColumn Header="检测项" Binding="{Binding}"/>
+                                        <DataGridTextColumn Header="检测值" Binding="{Binding}"/>-->
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <Frame x:Name="frame_op20" Margin="10" RenderTransformOrigin="0.5,0.5" NavigationUIVisibility="Hidden" Grid.Column="1">
+
+                                </Frame>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="TabItem_op30" Header="工位30" Height="50" Margin="0" Background="#FFF0FAFA" BorderBrush="#FFABADB3" Foreground="Black" Template="{DynamicResource TabItemCPStyle}" FontFamily="YouYuan" FontSize="30" BorderThickness="1" Width="150">
+                            <Grid Background="AliceBlue">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="353"/>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="10">
+                                    <!--<Image x:Name="image1" Source="front view.png"/>-->
+                                </Border>
+                                <Frame x:Name="frame_op30" Margin="10" RenderTransformOrigin="0.5,0.5" Width="316.5" NavigationUIVisibility="Hidden" Grid.Column="1"/>
+
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="TabItem_op40" Height="50" Margin="0" Header="工位40" Background="#FFF0FAFA" BorderBrush="#FFABADB3" Foreground="Black" Template="{DynamicResource TabItemCPStyle}" FontFamily="YouYuan" FontSize="30" BorderThickness="1" Width="150">
+                            <Grid Background="AliceBlue">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="353"/>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="10">
+                                    <!--<Image x:Name="image3" Source="front view.png"/>-->
+                                </Border>
+                                <Frame x:Name="frame_op40" Margin="10" RenderTransformOrigin="0.5,0.5" Width="316.5" NavigationUIVisibility="Hidden" Grid.Column="1"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="TabItem_op50" Height="50" Margin="0" Header="工位50" Background="#FFF0FAFA" BorderBrush="#FFABADB3" Foreground="Black" Template="{DynamicResource TabItemCPStyle}" FontFamily="YouYuan" FontSize="30" BorderThickness="1" Width="150">
+                            <Grid Background="AliceBlue">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="353"/>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="10">
+                                    <!--<Image x:Name="image4" Source="front view.png"/>-->
+                                </Border>
+                                <Frame x:Name="frame_op50" Margin="10" RenderTransformOrigin="0.5,0.5" Width="316.5" NavigationUIVisibility="Hidden" Grid.Column="1"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="TabItem_op60" Height="50" Margin="0" Header="工位60" Background="#FFF0FAFA" BorderBrush="#FFABADB3" Foreground="Black" Template="{DynamicResource TabItemCPStyle}" FontFamily="YouYuan" FontSize="30" ClipToBounds="True" BorderThickness="1" Width="150">
+                            <Grid Background="AliceBlue">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="353"/>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="10">
+                                    <!--<Image x:Name="image5" Source="front view.png"/>-->
+                                </Border>
+                                <Frame x:Name="frame_op60" Margin="10" RenderTransformOrigin="0.5,0.5" Width="316.5" NavigationUIVisibility="Hidden" Grid.Column="1"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="TabItem_op70" Height="50" Margin="0" Header="工位70" Background="#FFF0FAFA" BorderBrush="#FFABADB3" Foreground="Black" Template="{DynamicResource TabItemCPStyle}" FontFamily="YouYuan" FontSize="30" BorderThickness="1" Width="150">
+                            <Grid Background="AliceBlue">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="353"/>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="10">
+                                    <!--<Image x:Name="image6" Source="front view.png"/>-->
+                                </Border>
+                                <Frame x:Name="frame_op70" Margin="10" RenderTransformOrigin="0.5,0.5" Width="316.5" NavigationUIVisibility="Hidden" Grid.Column="1"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="TabItem_op80" Height="50" Margin="0" Header="工位80" Background="#FFF0FAFA" BorderBrush="#FFABADB3" Foreground="Black" Template="{DynamicResource TabItemCPStyle}" FontFamily="YouYuan" FontSize="30" BorderThickness="1" Width="150">
+                            <Grid Margin="0" Background="AliceBlue">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="353"/>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="10">
+                                    <!--<Image x:Name="image2" Source="工位80.png"/>-->
+                                </Border>
+                                <Grid Margin="10" Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Margin="0" Width="316.5" Height="65">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="185*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Label x:Name="lbl_1" Content="①" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="0"/>
+                                        <Label x:Name="lbl_OP20" Content="工位20" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" Margin="0" Grid.ColumnSpan="2" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" />
+                                        <Label x:Name="lbl_result_OP20" Content="检测结果" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="1,0,1,1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="0" Grid.Row="1" Grid.ColumnSpan="2"/>
+                                        <Label x:Name="label_OP20" Content ="通过" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Margin="0" Grid.Row="1" Grid.Column="2" BorderThickness="0,0,1,1" BorderBrush="#FFABADB3" Padding="0">
+                                            <Label.Background>
+                                                <SolidColorBrush Color="{DynamicResource Color_sky_blue}"/>
+                                            </Label.Background>
+                                        </Label>
+                                    </Grid>
+                                    <Grid Margin="0" Width="316.5" Height="65" Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="185*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Label x:Name="lbl_2" Content="②" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="0"/>
+                                        <Label x:Name="lbl_OP30" Content="工位30" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" Margin="0" Grid.ColumnSpan="2" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" />
+                                        <Label x:Name="lbl_result_OP30" Content="检测结果" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="1,0,1,1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="0" Grid.Row="1" Grid.ColumnSpan="2"/>
+                                        <Label x:Name="label_OP30" Content ="错误" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Margin="0" Grid.Row="1" Grid.Column="2" BorderThickness="0,0,1,1" BorderBrush="#FFABADB3" Padding="0">
+                                            <Label.Background>
+                                                <SolidColorBrush Color="{DynamicResource Color_watermelon_red}"/>
+                                            </Label.Background>
+                                        </Label>
+                                    </Grid>
+                                    <Grid Margin="0" Width="316.5" Height="65" Grid.Row="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="185*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Label x:Name="lbl_3" Content="③" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="0"/>
+                                        <Label x:Name="lbl_OP40" Content="工位40" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" Margin="0" Grid.ColumnSpan="2" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" />
+                                        <Label x:Name="lbl_result_OP40" Content="检测结果" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="1,0,1,1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="0" Grid.Row="1" Grid.ColumnSpan="2"/>
+                                        <Label x:Name="label_OP40" Content ="错误" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Margin="0" Grid.Row="1" Grid.Column="2" BorderThickness="0,0,1,1" BorderBrush="#FFABADB3" Padding="0">
+                                            <Label.Background>
+                                                <SolidColorBrush Color="{DynamicResource Color_watermelon_red}"/>
+                                            </Label.Background>
+                                        </Label>
+                                    </Grid>
+                                    <Grid Margin="0" Width="316.5" Height="65" Grid.Row="3">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="185*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Label x:Name="lbl_4" Content="④" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="0"/>
+                                        <Label x:Name="lbl_OP50" Content="工位50" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" Margin="0" Grid.ColumnSpan="2" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" />
+                                        <Label x:Name="lbl_result_OP50" Content="检测结果" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="1,0,1,1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="0" Grid.Row="1" Grid.ColumnSpan="2"/>
+                                        <Label x:Name="label_OP50" Content ="通过" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Margin="0" Grid.Row="1" Grid.Column="2" BorderThickness="0,0,1,1" BorderBrush="#FFABADB3" Padding="0">
+                                            <Label.Background>
+                                                <SolidColorBrush Color="{DynamicResource Color_sky_blue}"/>
+                                            </Label.Background>
+                                        </Label>
+                                    </Grid>
+                                    <Grid Margin="0" Width="316.5" Height="65" Grid.Row="4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="185*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Label x:Name="lbl_5" Content="⑤" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="0"/>
+                                        <Label x:Name="lbl_OP60" Content="工位60" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" Margin="0" Grid.ColumnSpan="2" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" />
+                                        <Label x:Name="lbl_result_OP60" Content="检测结果" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="1,0,1,1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="0" Grid.Row="1" Grid.ColumnSpan="2"/>
+                                        <Label x:Name="label_OP60" Content ="通过" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Margin="0" Grid.Row="1" Grid.Column="2" BorderThickness="0,0,1,1" BorderBrush="#FFABADB3" Padding="0">
+                                            <Label.Background>
+                                                <SolidColorBrush Color="{DynamicResource Color_sky_blue}"/>
+                                            </Label.Background>
+                                        </Label>
+                                    </Grid>
+                                    <Grid Margin="0" Width="316.5" Height="65" Grid.Row="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="185*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Label x:Name="lbl_6" Content="⑥" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="0"/>
+                                        <Label x:Name="lbl_OP70" Content="工位70" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="0,1,1,1" Margin="0" Grid.ColumnSpan="2" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" />
+                                        <Label x:Name="lbl_result_OP70" Content="检测结果" FontSize="20" BorderBrush="#FFABADB3" BorderThickness="1,0,1,1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Margin="0" Grid.Row="1" Grid.ColumnSpan="2"/>
+                                        <Label x:Name="label_OP70" Content ="通过" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Margin="0" Grid.Row="1" Grid.Column="2" BorderThickness="0,0,1,1" BorderBrush="#FFABADB3" Padding="0">
+                                            <Label.Background>
+                                                <SolidColorBrush Color="{DynamicResource Color_sky_blue}"/>
+                                            </Label.Background>
+                                        </Label>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="TabItem_statistics" Header="统计" HorizontalAlignment="Right" Margin="0,0,1,-2" Width="130" Background="{x:Null}" Template="{DynamicResource TabItemSysStyle}" Foreground="Black" BorderBrush="{x:Null}" Height="43" FontSize="24">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80*"/>
+                        <RowDefinition Height="80*"/>
+                        <RowDefinition Height="80*"/>
+                        <RowDefinition Height="80*"/>
+                        <RowDefinition Height="80*"/>
+                        <RowDefinition Height="80*"/>
+                        <RowDefinition Height="164*"/>
+                        <RowDefinition Height="164*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="17*"/>
+                        <ColumnDefinition Width="464*"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btn_save_statistics" Visibility="Hidden" Content="保存数据" Margin="10,84,0,44" Background="White" BorderThickness="2" RenderTransformOrigin="0.552,0.576" FontFamily="YouYuan" Grid.Column="2" Grid.Row="6" Width="199" Height="34" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <ListView ItemsSource="{Binding Records}"  x:Name="listview_statistics" Margin="10,68,10,34" Background="AliceBlue" FontFamily="YouYuan" Grid.RowSpan="8" MinHeight="600" MinWidth="600" Grid.ColumnSpan="3">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="200" Header="日期">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Date, Mode=OneWay}" Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="280" Header="咖啡壶型号">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Type, Mode=OneWay}" Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="140" Header="产量（个）">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Total, Mode=OneWay}" Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="140" Header="合格数">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Pass, Mode=OneWay}" Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="140" Header="合格率">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Ratio, Mode=OneWay}" Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="210" Header="检测项不合格数">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding FailItem, Mode=OneWay}" Margin="0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="200"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <!--新添加-->
+                    <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" Grid.ColumnSpan="2" Height="60" Grid.Column="1" Margin="10,8,248,11">
+                        <TextBlock x:Name="tbk_begindate" Margin="10,0,0,0" VerticalAlignment="Center"  FontFamily="YouYuan" Width="129"><Run Text="开始日期"/></TextBlock>
+                        <DatePicker SelectedDate="{Binding Time}" FontFamily="YouYuan" Grid.Column="1" SelectedDateFormat="Short" VerticalAlignment="Center" />
+                        <TextBlock x:Name="tbk_CP_type3" Margin="10,0,0,0" Text="型号" VerticalAlignment="Center" FontFamily="YouYuan" Grid.Column="1" Width="58"/>
+                        <ComboBox x:Name="comboBox_CP_type_statistics" VerticalAlignment="Top" BorderBrush="{x:Null}" Foreground="{x:Null}" Background="{x:Null}" Grid.Column="1" Width="178" Text="{Binding Type}" Margin="0,11,0,0">
+                            <ComboBoxItem x:Name="ComboBoxItem_short13">
+                                <TextBlock x:Name="tbk_short_1ACPE5" Foreground="Black" FontFamily="YouYuan"><Run Text="T_7319"/></TextBlock>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="ComboBoxItem_short23">
+                                <TextBlock x:Name="tbk_short_1ACPE6" Foreground="Black" FontFamily="YouYuan"><Run Text="T_7320"/></TextBlock>
+                            </ComboBoxItem>
+                        </ComboBox>
+                        <TextBlock x:Name="tbk_CP_t3ype" Text="检测项" VerticalAlignment="Center" Margin="10,0,0,0" FontFamily="YouYuan" Grid.Column="1" Width="78" />
+                        <ComboBox x:Name="comboBox_Cww_statistics" BorderBrush="{x:Null}" Foreground="{x:Null}" Background="{x:Null}" VerticalAlignment="Center" Grid.Column="1" Width="178" Text="{Binding Item}">
+                            <ComboBoxItem x:Name="combo1">
+                                <TextBlock x:Name="it23em1" Foreground="Black" FontFamily="YouYuan"><Run Text="item1" /></TextBlock>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="combo2">
+                                <TextBlock x:Name="item322" Foreground="Black" FontFamily="YouYuan"><Run Text="item2" /></TextBlock>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="combo3">
+                                <TextBlock x:Name="it32em3" Foreground="Black" FontFamily="YouYuan"><Run Text="item3" /></TextBlock>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="combo4">
+                                <TextBlock x:Name="item324" Foreground="Black" FontFamily="YouYuan"><Run Text="item4" /></TextBlock>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="co4">
+                                <TextBlock x:Name="em324" Foreground="Black" FontFamily="YouYuan"><Run Text="item5" /></TextBlock>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="combo34">
+                                <TextBlock x:Name="ite3m324" Foreground="Black" FontFamily="YouYuan"><Run Text="item6" /></TextBlock>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="com2bo4">
+                                <TextBlock x:Name="i324" Foreground="Black" FontFamily="YouYuan"><Run Text="item7" /></TextBlock>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="c1bo4">
+                                <TextBlock x:Name="mm24" Foreground="Black" FontFamily="YouYuan"><Run Text="item8" /></TextBlock>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="com44">
+                                <TextBlock x:Name="it2324" Foreground="Black" FontFamily="YouYuan"><Run Text="item9" /></TextBlock>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="cobo4">
+                                <TextBlock x:Name="itm324" Foreground="Black" FontFamily="YouYuan"><Run Text="item10" /></TextBlock>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="coo4">
+                                <TextBlock x:Name="it24" Foreground="Black" FontFamily="YouYuan"><Run Text="item11" /></TextBlock>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="c2oo4">
+                                <TextBlock x:Name="it4" Foreground="Black" FontFamily="YouYuan"><Run Text="item12" /></TextBlock>
+                            </ComboBoxItem>
+                        </ComboBox>
+                        <Button Command="{Binding QueryCommand}"  x:Name="button" Content="确定" FontFamily="YouYuan" Margin="10,6,0,6" Background="White" BorderThickness="2" Width="106"/>
+                    </StackPanel>
+                    <!--添加结束-->
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
+

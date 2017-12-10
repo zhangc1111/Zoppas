@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calibration", "Calibration\Calibration.csproj", "{B13583EF-2536-4257-967D-6B9D59487A89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeePot", "Zoppas\CoffeePot.csproj", "{B4E04FCF-3D32-4A0D-88E7-13A57F84A807}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zoppas.Log", "Zoppas.Log\Zoppas.Log.csproj", "{526B9EBD-70D5-4D1F-A471-D4E2EBA1CF49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zoppas.Vision", "Zoppas.Vision\Zoppas.Vision.csproj", "{AB03BF69-B688-428D-AE88-135371F19180}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zoppas.Core", "Zoppas.Core\Zoppas.Core.csproj", "{9E2EF59F-0BDF-4DD1-966C-FFC2CEED4B3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zoppas.IO", "Zoppas.IO\Zoppas.IO.csproj", "{79BF8CDE-5A12-4C6E-9AA3-210E2D50DE89}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B13583EF-2536-4257-967D-6B9D59487A89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B13583EF-2536-4257-967D-6B9D59487A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B13583EF-2536-4257-967D-6B9D59487A89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B13583EF-2536-4257-967D-6B9D59487A89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4E04FCF-3D32-4A0D-88E7-13A57F84A807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4E04FCF-3D32-4A0D-88E7-13A57F84A807}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4E04FCF-3D32-4A0D-88E7-13A57F84A807}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4E04FCF-3D32-4A0D-88E7-13A57F84A807}.Release|Any CPU.Build.0 = Release|Any CPU
+		{526B9EBD-70D5-4D1F-A471-D4E2EBA1CF49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{526B9EBD-70D5-4D1F-A471-D4E2EBA1CF49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{526B9EBD-70D5-4D1F-A471-D4E2EBA1CF49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{526B9EBD-70D5-4D1F-A471-D4E2EBA1CF49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB03BF69-B688-428D-AE88-135371F19180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB03BF69-B688-428D-AE88-135371F19180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB03BF69-B688-428D-AE88-135371F19180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB03BF69-B688-428D-AE88-135371F19180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E2EF59F-0BDF-4DD1-966C-FFC2CEED4B3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E2EF59F-0BDF-4DD1-966C-FFC2CEED4B3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E2EF59F-0BDF-4DD1-966C-FFC2CEED4B3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E2EF59F-0BDF-4DD1-966C-FFC2CEED4B3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79BF8CDE-5A12-4C6E-9AA3-210E2D50DE89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79BF8CDE-5A12-4C6E-9AA3-210E2D50DE89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79BF8CDE-5A12-4C6E-9AA3-210E2D50DE89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79BF8CDE-5A12-4C6E-9AA3-210E2D50DE89}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3A2B9873-FDEC-462D-A9AB-DB7F817220EC}
+	EndGlobalSection
+EndGlobal

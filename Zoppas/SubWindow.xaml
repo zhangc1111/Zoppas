@@ -1,0 +1,152 @@
+﻿<Window x:Class="Zoppas.SubWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Zoppas"
+        mc:Ignorable="d"
+        Title="InfoWindow" Height="300" Width="300">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="30" />
+        </Style>
+        <Style TargetType="Ellipse">
+            <Setter Property="Width" Value="100" />
+            <Setter Property="Height" Value="60" />
+            <Setter Property="Stroke" Value="Black" />
+        </Style>
+        <local:ColorChange x:Key="ColorChange" />
+        <local:VisibilityConverter x:Key="VisibilityChange" />
+    </Window.Resources>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top" Height="60">
+            <StackPanel Background="Silver" Orientation="Horizontal">
+                <Label Content="生产: " />
+                <Label Content="{Binding Total}" />
+                <Label Content="合格: " />
+                <Label Content="{Binding Pass}" />
+                <Label Content="不合格: " />
+                <Label Content="{Binding Fail}" />
+                <Label Content="支架号: " />
+                <Label Content="{Binding Frame}" />
+                <Button Content="隐藏数据" Command="{Binding HideItemsValueCommand}"/>
+            </StackPanel>
+        </DockPanel>
+        <DockPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <Label Content="{Binding Items[0].Name}" />
+                    <Label Content="1" />
+                    <Ellipse Fill="{Binding Items[0].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[0].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[0].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <Label Content="{Binding Items[1].Name}" />
+                    <Label Content="2" />
+                    <Ellipse Fill="{Binding Items[1].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[1].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[1].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="2">
+                    <Label Content="{Binding Items[2].Name}" />
+                    <Label Content="6" />
+                    <Ellipse Fill="{Binding Items[2].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[2].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[2].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="3">
+                    <Label Content="{Binding Items[3].Name}" />
+                    <Label Content="7" />
+                    <Ellipse Fill="{Binding Items[3].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[3].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[3].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="4">
+                    <Label Content="{Binding Items[4].Name}" />
+                    <Label Content="8" />
+                    <Ellipse Fill="{Binding Items[4].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[4].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[4].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="5">
+                    <Label Content="{Binding Items[5].Name}" />
+                    <Label Content="9" />
+                    <Ellipse Fill="{Binding Items[5].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[5].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[5].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="6">
+                    <Label Content="{Binding Items[6].Name}" />
+                    <Label Content="11" />
+                    <Ellipse Fill="{Binding Items[6].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[6].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[6].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="0">
+                    <Label Content="{Binding Items[7].Name}" />
+                    <Label Content="12" />
+                    <Ellipse Fill="{Binding Items[7].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[7].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[7].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <Label Content="{Binding Items[8].Name}" />
+                    <Label Content="21" />
+                    <Ellipse Fill="{Binding Items[8].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[8].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[8].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="2">
+                    <Label Content="{Binding Items[9].Name}" />
+                    <Label Content="14" />
+                    <Ellipse Fill="{Binding Items[9].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[9].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[9].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="3">
+                    <Label Content="{Binding Items[10].Name}" />
+                    <Label Content="15" />
+                    <Ellipse Fill="{Binding Items[10].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[10].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[10].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="4">
+                    <Label Content="{Binding Items[11].Name}" />
+                    <Label Content="16" />
+                    <Ellipse Fill="{Binding Items[11].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[11].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[11].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="5">
+                    <Label Content="{Binding Items[12].Name}" />
+                    <Label Content="" />
+                    <Ellipse Fill="{Binding Items[12].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[12].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[12].Ratio}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="6">
+                    <Label Content="{Binding Items[13].Name}" />
+                    <Label Content="" />
+                    <Ellipse Fill="{Binding Items[13].Result, Converter={StaticResource ColorChange}}" />
+                    <Label Content="{Binding Items[13].Value}" Visibility="{Binding ItemValueVisibility,Converter={StaticResource VisibilityChange}}" />
+                    <Label Content="{Binding Items[13].Ratio}" />
+                </StackPanel>
+            </Grid>
+        </DockPanel>
+    </DockPanel>
+</Window>
